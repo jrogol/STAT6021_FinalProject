@@ -47,4 +47,4 @@ for j in currencies:
     time.sleep(10+np.random.uniform(-10,10))
     
     
-
+AllData.to_csv('ExchangeRates.csv', index=False)
