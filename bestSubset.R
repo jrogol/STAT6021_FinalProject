@@ -58,6 +58,3 @@ reg.best2 <- regsubsets(spend~., data = train, nvmax = 50)
 coef(reg.best2, 5)
 pred <- predict(reg.best2, train, 5)
 best.mse2 <- mean((pred-train$spend)^2)
-
-
-#The lowest MSE resulting from best subset selection is 8.643.
