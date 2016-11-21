@@ -41,6 +41,7 @@ abline(0,1)
 mean((yhat.bag-data$new_spend[-train])^2)
 
 bagged <- c()
+bagged_models <- list()
 set.seed(1101)
 iter <- 0
 for (tree in trees){
@@ -50,6 +51,7 @@ for (tree in trees){
                                ntree = tree)
   yhat.bag = predict(spend.bagged, newdata = data[-train,])
   bagged[iter] <- mean((yhat.bag-data$new_spend[-train])^2)
+  bagged_models[[iter]] <- spend.bagged
 }
 
 
@@ -74,6 +76,21 @@ importance(spend.rf)
 
 varImpPlot(spend.rf)
 # LArger values of either indicate a greater importance.
+
+trees <- c(5,10,25,50,100,250,500)
+forest <- c()
+forest_models <- list()
+set.seed(1101)
+iter <- 0
+for (tree in trees){
+  iter <- iter + 1
+  spend.rf <- randomForest(new_spend~.-date-SpendVisit-SpendNight,
+                               data = data, subset = train , mtry = 3, importance = TRUE,
+                               ntree = tree)
+  yhat.rf = predict(spend.rf, newdata = data[-train,])
+  forest[iter] <- mean((yhat.rf-data$new_spend[-train])^2)
+  forest_models[[iter]] <- spend.rf
+}
 
 # https://github.com/araastat/reprtree/blob/master/R/plot.getTree.R
 source("TreeHelpers.R")
