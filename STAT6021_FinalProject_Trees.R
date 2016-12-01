@@ -63,7 +63,11 @@ spend.rf <- randomForest(new_spend~.-date-SpendVisit-SpendNight,
 
 yhat.rf <- predict(spend.rf, data[-train,])
 mean((yhat.rf-data$new_spend[-train])^2)
+
+spend.rf$mse # OOB MSE.
 #3.005
+
+spend.rf$test$rsq
 
 plot(spend.rf)
 
@@ -91,6 +95,13 @@ for (tree in trees){
   forest[iter] <- mean((yhat.rf-data$new_spend[-train])^2)
   forest_models[[iter]] <- spend.rf
 }
+
+par(mfrow=c(1,1))
+plot(forest~trees)
+
+forest_models[[6]]
+
+
 
 # https://github.com/araastat/reprtree/blob/master/R/plot.getTree.R
 source("TreeHelpers.R")
