@@ -29,7 +29,7 @@ standard<- merge(standard, currency_SD)
 i=0
 
 for(i in 1: length(standard)) {
-  standard$StandardRate[i]<- (abs(standard$Rate[i]-standard$meanCurrency[i])/standard$sdCurrency[i])
+  standard$StandardRate[i]<- ((standard$Rate[i]-standard$meanCurrency[i])/standard$sdCurrency[i])
 }
 
 #Write out Data Frame to csv
