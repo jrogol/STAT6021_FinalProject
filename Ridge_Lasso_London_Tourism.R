@@ -2,7 +2,7 @@
 library(glmnet)
 library(readr)
 library(zoo)
-
+library(MASS)
 #Load and Clean Data
 data <- read.csv('raw_with_avg_added_final.csv')
 data$market <- as.factor(data$market)
@@ -11,6 +11,10 @@ data$method <- as.factor(data$method)
 data$purpose <- as.factor(data$purpose)
 data$date <- as.yearqtr(paste(data$Quarter, data$Year, sep = ' '), format = 'Q%q %Y')
 data$Quarter <- factor(data$Quarter, levels = c("Q1", "Q2", "Q3", "Q4"), ordered = TRUE)
+
+#Transform Response Variable by Taking the Log
+
+
 ##################
 #Lasso Regression#
 ##################
@@ -28,7 +32,7 @@ train.matirx<-model.matrix(SpendPerVisit~., data = train.data)
 test.matrix<- model.matrix(SpendPerVisit~., data = test.data)
 
 # Create a lasso model on the response variable, spend
-lasso.mod <- glmnet(train.matirx,train.data$SpendPerVisit, alpha =1, lambda = grid, thresh = 1e-12)
+lasso.mod <- glmnet(train.matirx,log(train.data$SpendPerVisit), alpha =1, lambda = grid, thresh = 1e-12)
 
 # Set the seed for reproducable results
 set.seed(21)
@@ -44,7 +48,7 @@ bestlam <- lasso.out$lambda.min
 lasso.predicts <- predict(lasso.mod, s = bestlam, newx = test.matrix)
 
 #Take the Mean of the residuals  for the MSE
-MSE<-mean((lasso.predicts-test.data$SpendPerVisit)^2) #4050031
+MSE<-mean((lasso.predicts-test.data$SpendPerVisit)^2) #4,049,680
 
 
 #Coefficients of the model
@@ -60,7 +64,7 @@ R.squared.lasso = SSR.lasso/SST.lasso #0.04
 #Plot Residuals
 resids= (lasso.predicts - test.data$SpendPerVisit)
 plot(lasso.predicts, resids)
-lines(plot(test.data$date, resids))
+(lines(plot(test.data$date, resids))
 
 ##################
 #Ridge Regression#
@@ -77,7 +81,7 @@ bestlam2 <- ridge.out$lambda.min
 
 ridge.predicts <- predict(ridge.mod, s = bestlam, newx = test.matrix)
 
-mean((ridge.predicts-test.data$SpendPerVisit)^2) # 4,050,491
+mean((ridge.predicts-test.data$SpendPerVisit)^2) # 4,050,057
 
 coef(ridge.out, id = which.min(ridge.out$lambda))
 
