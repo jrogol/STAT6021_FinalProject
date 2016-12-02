@@ -28,7 +28,7 @@ standard<- merge(standard, currency_SD)
 #Standardize Rates by subtracting mean and dividing by SD for each currency    
 i=0
 
-for(i in 1: length(standard)) {
+for(i in 1: nrow(standard)) {
   standard$StandardRate[i]<- ((standard$Rate[i]-standard$meanCurrency[i])/standard$sdCurrency[i])
 }
 
