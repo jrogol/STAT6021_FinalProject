@@ -35,3 +35,17 @@ for(i in 1: length(standard)) {
 #Write out Data Frame to csv
 
 write.csv(standard, file = 'StandardizedRates.csv')
+
+
+#Merge Standard Rates with Rest of Data
+
+raw <- read.csv('raw_with_avg_added.csv', header= FALSE)
+names(raw) <- c('Currency', 'Year', 'Quarter', 'market', 'duration', 'method', 'purpose', 'destination',
+                'visits', 'spend', 'nights', 'sample', 'Rate')
+
+standardized <- read.csv('StandardizedRates.csv')
+raw_with_currency_and_st.avgRate <- merge(x = raw, y = standardized[,-1], by= c("Currency", "Year", 'Quarter', 'Rate'))
+
+
+
+write.table(raw_with_currency_and_st.avgRate, file="raw_with_avg_added_final.csv", row.names=FALSE, col.names=TRUE, sep=",")
