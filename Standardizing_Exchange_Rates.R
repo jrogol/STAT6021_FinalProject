@@ -47,5 +47,16 @@ standardized <- read.csv('StandardizedRates.csv')
 raw_with_currency_and_st.avgRate <- merge(x = raw, y = standardized[,-1], by= c("Currency", "Year", 'Quarter', 'Rate'))
 
 
-
+#Write out data set with standardized rates
 write.table(raw_with_currency_and_st.avgRate, file="raw_with_avg_added_final.csv", row.names=FALSE, col.names=TRUE, sep=",")
+
+#Read in clean data set
+complete_data<- read.csv('raw_with_avg_added_final.csv')
+
+#Drop unnecessary predictors
+complete_data <- complete_data[, -c(4,9,13,14,15)]
+
+#Rename Columns
+colnames(complete_data)[9]<- 'spend in millions'
+colnames(complete_data)[8]<- 'visits in 1000s'
+colnames(complete_data)[10]<- 'nights in 1000s'
