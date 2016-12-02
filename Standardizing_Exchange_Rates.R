@@ -56,7 +56,16 @@ complete_data<- read.csv('raw_with_avg_added_final.csv')
 #Drop unnecessary predictors
 complete_data <- complete_data[, -c(4,9,13,14,15)]
 
-#Rename Columns
-colnames(complete_data)[9]<- 'spend in millions'
-colnames(complete_data)[8]<- 'visits in 1000s'
-colnames(complete_data)[10]<- 'nights in 1000s'
+
+#Rescale Spend Variable
+complete_data$spend<-complete_data$spend*1000000
+
+#Rescale Visit Variable
+complete_data$visits<- complete_data$visits*1000
+
+#Create new Spend/Visit Variable
+complete_data$SpendPerVisit<- (complete_data$spend/complete_data$visits)
+
+#Write out clean Data Set
+
+write.table(complete_data, file="raw_with_avg_added_final.csv", row.names=FALSE, col.names=TRUE, sep=",")
