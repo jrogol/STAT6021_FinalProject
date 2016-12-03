@@ -1,4 +1,3 @@
-
 library(zoo)
 library(dygraphs)
 library(dplyr)
@@ -7,7 +6,7 @@ library(tidyr)
 
 ts_data <- data %>%
   group_by(market, date) %>%
-  summarise(total_spend=sum(new_spend)) %>%
+  summarise(total_spend=sum(spend)) %>%
   spread(market, total_spend, fill =0) %>%
   arrange(date)
 
@@ -21,7 +20,7 @@ dygraph(z[,-1]) %>%
 
 total <- data %>%
   group_by(date) %>%
-  summarise(total = sum(new_spend)) %>%
+  summarise(total = sum(SpendPerVisit)) %>%
   arrange(date)
 
 total <- zooreg(total[,2], start = as.yearqtr("2006-1"),
@@ -50,9 +49,10 @@ fit2 <- auto.arima(ts)
 fcast <- forecast(fit2,36)
 plot(fcast)
 
-hw <- HoltWinters(ts)
+hw <- HoltWinters(ts, beta = FALSE)
 p <- predict(hw, n.ahead = 36, prediction.interval = TRUE)
 all <- cbind(ts, p)
+plot(hw)
 
 dygraph(all, "Total Spend in London") %>%
   dySeries("ts", label = "Actual") %>%
