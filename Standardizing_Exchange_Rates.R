@@ -1,4 +1,4 @@
-#Standardizing Exchange Rates
+#Standardizing Exchange Rates and data cleaning
 library(dplyr)
 standard<- read.csv('final_AVG.csv', header = FALSE)
 
@@ -50,6 +50,8 @@ raw_with_currency_and_st.avgRate <- merge(x = raw, y = standardized[,-1], by= c(
 #Write out data set with standardized rates
 write.table(raw_with_currency_and_st.avgRate, file="raw_with_avg_added_final.csv", row.names=FALSE, col.names=TRUE, sep=",")
 
+
+#Create new Response Variable: SpendPerVisit
 #Read in clean data set
 complete_data<- read.csv('raw_with_avg_added_final.csv')
 
@@ -63,7 +65,7 @@ complete_data$spend<-complete_data$spend*1000000
 #Rescale Visit Variable
 complete_data$visits<- complete_data$visits*1000
 
-#Create new Spend/Visit Variable
+#Create new SpendPerVisit Variable
 complete_data$SpendPerVisit<- (complete_data$spend/complete_data$visits)
 
 #Write out clean Data Set
