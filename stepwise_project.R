@@ -65,7 +65,7 @@ library(ROCR)
 
 pred = prediction(predicted, test$greater500)
 roc.curve<- performance(pred, 'tpr', 'fpr')
-auc = performance(prediction, "auc")@y.values[[1]]
+auc = performance(pred, "auc")@y.values[[1]]
 auc # 0.8352237
 
 # plot
