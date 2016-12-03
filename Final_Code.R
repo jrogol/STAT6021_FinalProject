@@ -556,7 +556,26 @@ auc # 0.8352237
 plot(roc.curve, main = paste("ROC (AUC=", round(auc,2), ")", sep=""))
 abline(0, 1, lty="dashed")
 
+
+#########################
 #### Regression Tree ####
+#########################
+data <- read_csv('raw_with_avg_added_final.csv')
+# Visits is single unites, spend is single pouds, nights is in 1000's
+data$market <- as.factor(data$market)
+data$duration <- factor(data$duration, levels=c("1-3  nights", "4-7  nights", "8-14 nights", "15+  nights"), ordered=TRUE)
+data$method <- as.factor(data$method)
+data$purpose <- as.factor(data$purpose)
+data$date <- as.yearqtr(paste(data$Quarter, data$Year, sep = ' '), format = 'Q%q %Y')
+
+data$Quarter <- factor(data$Quarter, levels = c("Q1", "Q2", "Q3", "Q4"), ordered = TRUE)
+
+str(data)
+# 4 Quarters, 51 Markets, 4 durations, 3 methods, 5 purposes
+# Year, Nights, Standard Rate (3)
+# 70 total predictors, including dummy variables (8 total)
+
+data$AdjSPV <- data$SpendPerVisit + .000000000000001
 
 tree1 <- tree(log(AdjSPV)~.-SpendPerVisit-Currency-date-spend-visits, data = data)
 # This won't work - the 'market' factor has more than 32 levels!
@@ -685,8 +704,9 @@ source("TreeHelpers.R")
 
 plot.getTree(spend.rf)
 
-
+#####################
 #### Time-Series ####
+#####################
 
 library(dygraphs)
 library(dplyr)
