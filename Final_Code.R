@@ -516,29 +516,30 @@ log_MSE #5715789
 ################################################################################
 
 
-########################################################
-#### Binary Classification using Logistic Regression#####   
-#########################################################
+#####################################################
+# Binary Classification using Logistic Regression   #
+#####################################################
 
-#Create a column called greater500
-#if SpendPerVisit is greater than 500, assign 1 to the corresponding 
-#greater500 cell
-#if less than 500, assign 0 to the corresponding greater500 cell
+#Create a column called greater
+#if SpendPerVisit is greater than the threshold, assign 1 to the corresponding 
+#greater cell
+#if less than the threshold, assign 0 to the corresponding greater cell
 
+
+#####500
 for (i in 1:nrow(dataset)){
   if (dataset$SpendPerVisit[i] > 500 ){
-    dataset$greater500[i] = 1
+    dataset$greater[i] = 1
   }else{
-    dataset$greater500[i] = 0
+    dataset$greater[i] = 0
   }
 }
 
-#Split Data into Training and Testing
+
 train = dataset[dataset$Year != 2015,]
 test = dataset[dataset$Year == 2015,]
 
-#Perform Logistic Regression
-logistic <- glm(greater500 ~ Year + Quarter +market +duration + method + purpose+
+logistic <- glm(greater ~ Year + Quarter +market +duration + method + purpose+
                   nights+StandardRate, data=train, family = 'binomial')
 summary(logistic)
 predicted <- predict(logistic, newdata = test, type = 'response')
@@ -546,8 +547,7 @@ predicted
 
 round_pred <- round(predicted)
 
-#Plot ROC Curve and Calculate AUC
-pred = prediction(predicted, test$greater500)
+pred = prediction(predicted, test$greater)
 roc.curve<- performance(pred, 'tpr', 'fpr')
 auc = performance(pred, "auc")@y.values[[1]]
 auc # 0.8352237
@@ -556,6 +556,102 @@ auc # 0.8352237
 plot(roc.curve, main = paste("ROC (AUC=", round(auc,2), ")", sep=""))
 abline(0, 1, lty="dashed")
 
+
+
+
+#####2000
+for (i in 1:nrow(dataset)){
+  if (dataset$SpendPerVisit[i] > 2000 ){
+    dataset$greater[i] = 1
+  }else{
+    dataset$greater[i] = 0
+  }
+}
+
+
+train = dataset[dataset$Year != 2015,]
+test = dataset[dataset$Year == 2015,]
+
+logistic <- glm(greater ~ Year + Quarter +market +duration + method + purpose+
+                  nights+StandardRate, data=train, family = 'binomial')
+summary(logistic)
+predicted <- predict(logistic, newdata = test, type = 'response')
+predicted
+
+round_pred <- round(predicted)
+
+pred = prediction(predicted, test$greater)
+roc.curve<- performance(pred, 'tpr', 'fpr')
+auc = performance(pred, "auc")@y.values[[1]]
+auc #0.8755012
+
+# plot
+plot(roc.curve, main = paste("ROC (AUC=", round(auc,2), ")", sep=""))
+abline(0, 1, lty="dashed")
+
+
+
+#####5000
+for (i in 1:nrow(dataset)){
+  if (dataset$SpendPerVisit[i] > 5000 ){
+    dataset$greater[i] = 1
+  }else{
+    dataset$greater[i] = 0
+  }
+}
+
+
+train = dataset[dataset$Year != 2015,]
+test = dataset[dataset$Year == 2015,]
+
+logistic <- glm(greater ~ Year + Quarter +market +duration + method + purpose+
+                  nights+StandardRate, data=train, family = 'binomial')
+summary(logistic)
+predicted <- predict(logistic, newdata = test, type = 'response')
+predicted
+
+
+pred = prediction(predicted, test$greater)
+roc.curve<- performance(pred, 'tpr', 'fpr')
+auc = performance(pred, "auc")@y.values[[1]]
+auc # 0.913479
+
+# plot
+plot(roc.curve, main = paste("ROC (AUC=", round(auc,2), ")", sep=""))
+abline(0, 1, lty="dashed")
+
+
+
+
+
+#####10000
+for (i in 1:nrow(dataset)){
+  if (dataset$SpendPerVisit[i] > 10000 ){
+    dataset$greater[i] = 1
+  }else{
+    dataset$greater[i] = 0
+  }
+}
+
+
+train = dataset[dataset$Year != 2015,]
+test = dataset[dataset$Year == 2015,]
+
+logistic <- glm(greater ~ Year + Quarter +market +duration + method + purpose+
+                  nights+StandardRate, data=train, family = 'binomial')
+summary(logistic)
+predicted <- predict(logistic, newdata = test, type = 'response')
+predicted
+
+
+pred = prediction(predicted, test$greater)
+roc.curve<- performance(pred, 'tpr', 'fpr')
+auc = performance(pred, "auc")@y.values[[1]]
+auc #0.8851558
+
+# plot
+plot(roc.curve, main = paste("ROC (AUC=", round(auc,2), ")", sep=""))
+abline(0, 1, lty="dashed")
 
 #########################
 #### Regression Tree ####
