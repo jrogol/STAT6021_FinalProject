@@ -516,9 +516,9 @@ log_MSE #5715789
 ################################################################################
 
 
-#####################################################
-# Binary Classification using Logistic Regression   #
-#####################################################
+########################################################
+#### Binary Classification using Logistic Regression#####   
+#########################################################
 
 #Create a column called greater500
 #if SpendPerVisit is greater than 500, assign 1 to the corresponding 
