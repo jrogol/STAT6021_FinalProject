@@ -372,7 +372,7 @@ bestlam <- lasso.out$lambda.min
 lasso.predicts <- predict(lasso.mod, s = bestlam, newx = test.matrix)
 
 #Take the Mean of the residuals  for the MSE
-MSE<-mean((exp(lasso.predicts))-test.data$SpendPerVisit)^2 #116,806
+MSE<-(sum(((exp(lasso.predicts))-test.data$SpendPerVisit)^2))/(3019-6-1) #5,739,926
 
 
 #Coefficients of the model
@@ -406,7 +406,7 @@ bestlam2 <- ridge.out$lambda.min
 
 ridge.predicts <- predict(ridge.mod, s = bestlam, newx = test.matrix)
 
-mean((exp(ridge.predicts)-test.data$SpendPerVisit)^2) #5,716,153
+(sum((exp(ridge.predicts)-test.data$SpendPerVisit)^2))/(3019-9-1) #5,735,149
 
 coef(ridge.out, id = which.min(ridge.out$lambda))
 
@@ -462,8 +462,8 @@ model <- lm(SpendPerVisit ~ duration + market + purpose + nights + Year + method
 summary(model)
 
 test_predicted_forward_stepwise <- predict(model, test)
-MSE_forward_stepwise <- mean((test_predicted_forward_stepwise - test$SpendPerVisit)^2)
-MSE_forward_stepwise #5456789
+MSE_forward_stepwise <- (sum((test_predicted_forward_stepwise - test$SpendPerVisit)^2))/(3019-7-1)
+MSE_forward_stepwise #5,471,287
 
 plot(model$fitted.values, model$residuals)
 
@@ -509,8 +509,8 @@ summary(log_stepwise) #0.1549
 log_test_predicted <- predict(log_stepwise, newdata = test, type= 'response')
 
 test_predicted <- exp(log_test_predicted)
-log_MSE <- mean((test_predicted - test$SpendPerVisit)^2)
-log_MSE #5715789
+log_MSE <- sum((test_predicted - test$SpendPerVisit)^2)/(3019-8-1)
+log_MSE #5,732,879
 
 
 ################################################################################
